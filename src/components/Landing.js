@@ -8,7 +8,9 @@ function Landing() {
   return (
 
     <div>
-        <button onClick={() => {history.push('/signup')}}>signup</button>
+      <h1> Let us help you choose your watches</h1>
+     
+      <button onClick={() => {history.push('/signup')}}>signup</button>
          <button onClick={() => {history.push('/login')}}>LOGIN</button>
     </div>
   )
