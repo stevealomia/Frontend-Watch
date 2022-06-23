@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
+import { Col, Row, Button} from 'react-bootstrap'
 
 function Favorites({ authorized }) {
   const [watches, setWatches] = useState([]);
+  
 
   useEffect(() => {
     const getWatches = () => {
@@ -14,18 +16,17 @@ function Favorites({ authorized }) {
         })
         .then((json) => {
           console.log('json', json)
-          const favorited = json.filter(watch => watch.details).map(watch => JSON.parse(watch.details))
-          setWatches(favorited);
+          setWatches(json);
         });
     };
 
     getWatches();
   }, []);
 
-  function favorite(watch) {
-    fetch('/save-favorite', { 
+  function removeFromFavorites(watch) {
+    fetch(`/remove-favorite/${watch.id}`, { 
       headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
+      method: 'DELETE',
       body: JSON.stringify(watch)
     }).then(res => {
       return res.json()
@@ -34,26 +35,33 @@ function Favorites({ authorized }) {
         return watch.id !== w.id
       })
       setWatches(newWatches)
-      console.log('json', json)
     })
   }
+ 
+
+
 
   console.log("watches", watches);
   return (
-    <div className="grid">
-      {watches.map((watch) => (
-        <div>
-          <Card style={{ width: "18rem" }}>
-            <Card.Img variant="top" src={watch.image_url} />
-            <Card.Body>
-              <Card.Title>{watch.title}</Card.Title>
-              <Card.Text>{watch.watchName}</Card.Text>
-              <button onClick={() => favorite(watch)}>Remove from favorite</button>
-            </Card.Body>
-          </Card>
-        </div>
-      ))}
-    </div>
+    <Row className="g-4">
+      {watches.map((watch) => {
+        /* const isFavorite = favorites.find(fav => fav.watch_id === watch.id) */
+        return (
+          <Col md={3}>
+            <Card>
+              <Card.Img variant="top" src={watch.image_url} />
+              <Card.Body>
+                <Card.Title>{watch.title}</Card.Title>
+                <Card.Text style={{ minHeight: 60}}>{watch.watchName}</Card.Text>
+                <Button variant="danger" onClick={() => removeFromFavorites(watch)}>
+                  Remove from favorite
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        );
+      })}
+    </Row>
   );
 }
 

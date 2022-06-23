@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
+import { Button, Row, Col } from 'react-bootstrap'
 
 function Watches({ authorized }) {
   const [watches, setWatches] = useState([]);
@@ -38,6 +39,7 @@ function Watches({ authorized }) {
   }, []);
 
   function favorite(watch) {
+    // console.log(watch)
     fetch("/save-favorite", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -54,25 +56,25 @@ function Watches({ authorized }) {
 
   console.log("watches", watches);
   return (
-    <div className="grid">
+    <Row className="g-4">
       {watches.map((watch) => {
         /* const isFavorite = favorites.find(fav => fav.watch_id === watch.id) */
         return (
-          <div>
-            <Card style={{ width: "18rem" }}>
+          <Col md={3}>
+            <Card>
               <Card.Img variant="top" src={watch.image_url} />
               <Card.Body>
                 <Card.Title>{watch.title}</Card.Title>
-                <Card.Text>{watch.watchName}</Card.Text>
-                <button onClick={() => favorite(watch)}>
+                <Card.Text style={{ minHeight: 60}}>{watch.watchName}</Card.Text>
+                <Button variant="primary" onClick={() => favorite(watch)}>
                   Add to favorite
-                </button>
+                </Button>
               </Card.Body>
             </Card>
-          </div>
+          </Col>
         );
       })}
-    </div>
+    </Row>
   );
 }
 

@@ -18,7 +18,8 @@ export default Navbar
  */
 
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
+import { Container, Nav, Navbar } from 'react-bootstrap'
 
 const active = {
   opacity: 1,
@@ -29,8 +30,8 @@ const active = {
 }
 
 
-function NavBar({ currentUser, setCurrentUser }) {
-
+function NavItems({ currentUser, setCurrentUser }) {
+  
   const handleSignInAlert = () => {
     alert("You must be logged in to access to this page! Redirecting to sign up")
   }
@@ -41,86 +42,56 @@ function NavBar({ currentUser, setCurrentUser }) {
       .then(setCurrentUser())
   }
 
+  if (currentUser) {
+    return (
+      <>
+        <Link to="/" exact class="nav-link">
+          Home
+        </Link>
+        <Link to="/watches" exact class="nav-link">
+          All Watches
+        </Link>
+        <Link to="/favorites" exact class="nav-link">
+          {currentUser.name}' Favorites
+        </Link>
+        <Link to="/profile" exact class="nav-link">
+          Profile
+        </Link>
+        <a onClick={handleLogout} class="nav-link">
+          Logout
+        </a>
+      </>
+    )
+  }
+
   return (
-    currentUser ?
-      // NavBar for User that is logged in
-      (
-        <div className="nav__style">
-          <NavLink
-            className="nav__tab home__tab"
-            exact to="/"
-            activeStyle={active}
-          >
-            {currentUser.name}'s Home
-          </NavLink>
+    <>
+      <Link to="/" exact class="nav-link">
+        Home
+      </Link>
+      <Link to="/watches" exact class="nav-link">
+        All Watches
+      </Link>
+      <Link to="/login" exact class="nav-link">
+        Login
+      </Link>
+      <Link to="/signup" exact class="nav-link">
+        Signup
+      </Link>
+    </>
+  )
+}
 
-          <NavLink
+function NavBar({ currentUser, setCurrentUser }) {
 
-            className="nav__tab cards__tab"
-            exact to="/watches"
-            activeStyle={active}
-          >
-            All Watches
-          </NavLink>
-          
-          <NavLink
-            className="nav__tab "
-            exact to="/favorites"
-            activeStyle={active}
-          >
-            Favorite Watches
-          </NavLink>
-          <NavLink
-            className="nav__tab profile__tab"
-            exact to="/profile"
-            activeStyle={active}
-          >
-            {currentUser.name}'s Profile
-          </NavLink>
-          <NavLink
-            className="nav__tab logout__tab"
-            exact to="/"
-            onClick={handleLogout}
-          >
-            Logout
-          </NavLink>
-        </div>
-      ) :
-      (
-        <div className="nav__style">
-          <NavLink
-            className="nav__tab home__tab"
-            exact to="/"
-            activeStyle={active}
-          >
-            Home
-          </NavLink>
-          <NavLink
-
-            className="nav__tab cards__tab"
-            exact to="/watches"
-            activeStyle={active}
-          >
-            All Watches
-          </NavLink>
-          <NavLink
-            className="nav__tab saved__tab"
-            onClick={handleSignInAlert}
-            exact to="/signup"
-          >
-            My Watches
-          </NavLink>
-          <NavLink
-            className="nav__tab profile__tab"
-            onClick={handleSignInAlert}
-            exact to="/signup"
-          >
-            Details
-          </NavLink>
-
-        </div>
-      )
-
+  return (
+    <Navbar bg="light" expand="lg">
+      <Container>
+        <Navbar.Collapse>
+          <NavItems currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   )
 }
 
